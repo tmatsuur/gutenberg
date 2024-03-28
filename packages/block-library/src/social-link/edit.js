@@ -117,7 +117,8 @@ const SocialLinkEdit = ( {
 		iconBackgroundColor,
 		iconBackgroundColorValue,
 	} = context;
-	const classes = clsx( 'wp-social-link', 'wp-social-link-' + service, {
+	const classes = clsx( 'wp-social-link', {
+		[ `wp-social-link-${ service }` ]: !! service,
 		'wp-social-link__is-incomplete': ! url,
 		[ `has-${ iconColor }-color` ]: iconColor,
 		[ `has-${ iconBackgroundColor }-background-color` ]:
