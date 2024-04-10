@@ -7,7 +7,6 @@ import classNames from 'classnames';
  * WordPress dependencies
  */
 import { __, isRTL } from '@wordpress/i18n';
-import { store as blockEditorStore } from '@wordpress/block-editor';
 import { useViewportMatch } from '@wordpress/compose';
 import {
 	__experimentalItemGroup as ItemGroup,
@@ -17,6 +16,7 @@ import {
 	Button,
 } from '@wordpress/components';
 import { useCallback, useMemo } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { Icon, chevronRight, chevronLeft } from '@wordpress/icons';
 
 /**
@@ -28,7 +28,7 @@ import MediaUpload from '../../media-upload';
 import { useMediaCategories } from './hooks';
 import { getBlockAndPreviewFromMedia } from './utils';
 import MobileTabNavigation from '../mobile-tab-navigation';
-import { useSelect } from '@wordpress/data';
+import { store as blockEditorStore } from '../../../store';
 
 const ALLOWED_MEDIA_TYPES = [ 'image', 'video', 'audio' ];
 
