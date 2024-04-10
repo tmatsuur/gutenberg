@@ -7,6 +7,7 @@ import classNames from 'classnames';
  * WordPress dependencies
  */
 import { __, isRTL } from '@wordpress/i18n';
+import { store as blockEditorStore } from '@wordpress/block-editor';
 import { useViewportMatch } from '@wordpress/compose';
 import {
 	__experimentalItemGroup as ItemGroup,
@@ -27,6 +28,7 @@ import MediaUpload from '../../media-upload';
 import { useMediaCategories } from './hooks';
 import { getBlockAndPreviewFromMedia } from './utils';
 import MobileTabNavigation from '../mobile-tab-navigation';
+import { useSelect } from '@wordpress/data';
 
 const ALLOWED_MEDIA_TYPES = [ 'image', 'video', 'audio' ];
 
@@ -39,15 +41,21 @@ function MediaTab( {
 	const mediaCategories = useMediaCategories( rootClientId );
 	const isMobile = useViewportMatch( 'medium', '<' );
 	const baseCssClass = 'block-editor-inserter__media-tabs';
+	const { getSettings } = useSelect( blockEditorStore );
+	const { imageDefaultSize } = getSettings();
 	const onSelectMedia = useCallback(
 		( media ) => {
 			if ( ! media?.url ) {
 				return;
 			}
-			const [ block ] = getBlockAndPreviewFromMedia( media, media.type );
+			const [ block ] = getBlockAndPreviewFromMedia(
+				media,
+				media.type,
+				imageDefaultSize
+			);
 			onInsert( block );
 		},
-		[ onInsert ]
+		[ onInsert, imageDefaultSize ]
 	);
 	const mobileMediaCategories = useMemo(
 		() =>
