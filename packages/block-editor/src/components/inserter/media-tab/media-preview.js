@@ -168,14 +168,38 @@ export function MediaPreview( { media, onClick, category } ) {
 							if ( isBlobURL( img.url ) ) {
 								return;
 							}
-							onClick( {
-								...clonedBlock,
-								attributes: {
-									...clonedBlock.attributes,
-									id: img.id,
-									url: img.url,
-								},
-							} );
+
+							if (
+								clonedBlock.name === 'core/image' &&
+								img.media_type === 'image'
+							) {
+								const sizeSlug =
+									img.sizes?.[ imageDefaultSize ] ||
+									img.media_details?.sizes?.[
+										imageDefaultSize
+									]
+										? imageDefaultSize
+										: 'full';
+								onClick( {
+									...clonedBlock,
+									attributes: {
+										...clonedBlock.attributes,
+										id: img.id,
+										url: img.url,
+										sizeSlug,
+									},
+								} );
+							} else {
+								onClick( {
+									...clonedBlock,
+									attributes: {
+										...clonedBlock.attributes,
+										id: img.id,
+										url: img.url,
+									},
+								} );
+							}
+
 							createSuccessNotice(
 								__( 'Image uploaded and inserted.' ),
 								{ type: 'snackbar' }
@@ -200,6 +224,7 @@ export function MediaPreview( { media, onClick, category } ) {
 			mediaUpload,
 			createErrorNotice,
 			createSuccessNotice,
+			imageDefaultSize,
 		]
 	);
 
