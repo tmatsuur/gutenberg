@@ -400,6 +400,7 @@ export function expandBlock( clientId ) {
 export const modifyContentLockBlock =
 	( clientId ) =>
 	( { select, dispatch } ) => {
+		dispatch.selectBlock( clientId );
 		dispatch.__unstableMarkNextChangeAsNotPersistent();
 		dispatch.updateBlockAttributes( clientId, {
 			templateLock: undefined,
