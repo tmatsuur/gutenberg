@@ -30,23 +30,14 @@ export default function InserterSidebar( {
 		const { getInserterSidebarToggleRef, getInsertionPoint } = unlock(
 			select( editorStore )
 		);
-		const { getBlockRootClientId, __unstableGetEditorMode, getSettings } =
-			select( blockEditorStore );
+		const { getSettings } = select( blockEditorStore );
 		const { get } = select( preferencesStore );
-		const getBlockSectionRootClientId = () => {
-			if ( __unstableGetEditorMode() === 'zoom-out' ) {
-				const { sectionRootClientId } = unlock( getSettings() );
-				if ( sectionRootClientId ) {
-					return sectionRootClientId;
-				}
-			}
-			return getBlockRootClientId();
-		};
+		const { sectionRootClientId } = unlock( getSettings() );
 		return {
 			inserterSidebarToggleRef: getInserterSidebarToggleRef(),
 			insertionPoint: getInsertionPoint(),
 			showMostUsedBlocks: get( 'core', 'mostUsedBlocks' ),
-			blockSectionRootClientId: getBlockSectionRootClientId(),
+			blockSectionRootClientId: sectionRootClientId ?? '',
 		};
 	}, [] );
 	const { setIsInserterOpened } = useDispatch( editorStore );
@@ -79,7 +70,7 @@ export default function InserterSidebar( {
 					showInserterHelpPanel
 					shouldFocusBlock={ isMobileViewport }
 					rootClientId={
-						blockSectionRootClientId ?? insertionPoint.rootClientId
+						insertionPoint.rootClientId ?? blockSectionRootClientId
 					}
 					__experimentalInsertionIndex={
 						insertionPoint.insertionIndex
