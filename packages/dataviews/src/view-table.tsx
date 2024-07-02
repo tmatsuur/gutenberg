@@ -229,7 +229,7 @@ const _HeaderMenu = forwardRef( function HeaderMenu< Item >(
 						} }
 					>
 						<DropdownMenuItemLabel>
-							{ __( 'Hide' ) }
+							{ __( 'Hide column' ) }
 						</DropdownMenuItemLabel>
 					</DropdownMenuItem>
 				) }
