@@ -107,6 +107,7 @@ export default function Image( {
 	clientId,
 	blockEditingMode,
 	parentLayoutType,
+	containerWidth,
 } ) {
 	const {
 		url = '',
@@ -902,6 +903,7 @@ export default function Image( {
 		// @todo It would be good to revisit this once a content-width variable
 		// becomes available.
 		const maxWidthBuffer = maxWidth * 2.5;
+		const maxContentWidth = containerWidth || maxWidthBuffer;
 
 		let showRightHandle = false;
 		let showLeftHandle = false;
@@ -947,9 +949,9 @@ export default function Image( {
 				} }
 				showHandle={ isSingleSelected }
 				minWidth={ minWidth }
-				maxWidth={ maxWidthBuffer }
+				maxWidth={ maxContentWidth }
 				minHeight={ minHeight }
-				maxHeight={ maxWidthBuffer / ratio }
+				maxHeight={ maxContentWidth / ratio }
 				lockAspectRatio={ ratio }
 				enable={ {
 					top: false,
