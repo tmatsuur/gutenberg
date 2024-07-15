@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### New Features
+
+-   `Composite`: add stable version of the component ([#63564](https://github.com/WordPress/gutenberg/pull/63564)).
+
 ### Bug Fixes
 
 -   `ColorPalette`: Remove extra bottom margin when `CircularOptionPicker` is unneeded ([#63961](https://github.com/WordPress/gutenberg/pull/63961)).
