@@ -15,7 +15,11 @@ import { useMemo, useState } from '@wordpress/element';
 import { default as DataViewsBulkActions } from '../dataviews-bulk-actions';
 import DataViewsBulkActionsToolbar from '../dataviews-bulk-actions-toolbar';
 import DataViewsContext from '../dataviews-context';
-import DataViewsFilters from '../dataviews-filters';
+import {
+	default as DataViewsFilters,
+	useFilters,
+	FilterVisibilityToggle,
+} from '../dataviews-filters';
 import DataViewsLayout from '../dataviews-layout';
 import DataviewsPagination from '../dataviews-pagination';
 import DataViewsSearch from '../dataviews-search';
@@ -69,6 +73,8 @@ export default function DataViews< Item >( {
 }: DataViewsProps< Item > ) {
 	const [ selectionState, setSelectionState ] = useState< string[] >( [] );
 	const [ density, setDensity ] = useState< number >( 0 );
+	const [ isShowingFilter, setIsShowingFilter ] =
+		useState< boolean >( false );
 	const isUncontrolled =
 		selectionProperty === undefined || onChangeSelection === undefined;
 	const selection = isUncontrolled ? selectionState : selectionProperty;
@@ -90,6 +96,7 @@ export default function DataViews< Item >( {
 		);
 	}, [ selection, data, getItemId ] );
 
+	const filters = useFilters( _fields, view );
 	return (
 		<DataViewsContext.Provider
 			value={ {
@@ -120,7 +127,6 @@ export default function DataViews< Item >( {
 						wrap
 					>
 						{ search && <DataViewsSearch label={ searchLabel } /> }
-						<DataViewsFilters />
 					</HStack>
 					{ view.type === LAYOUT_GRID && (
 						<DensityPicker
@@ -139,7 +145,16 @@ export default function DataViews< Item >( {
 						/>
 						{ header }
 					</HStack>
+					<FilterVisibilityToggle
+						filters={ filters }
+						view={ view }
+						onChangeView={ onChangeView }
+						setOpenedFilter={ setOpenedFilter }
+						setIsShowingFilter={ setIsShowingFilter }
+						isShowingFilter={ isShowingFilter }
+					/>
 				</HStack>
+				{ isShowingFilter && <DataViewsFilters /> }
 				<DataViewsLayout />
 				<DataviewsPagination />
 				<DataViewsBulkActionsToolbar />
