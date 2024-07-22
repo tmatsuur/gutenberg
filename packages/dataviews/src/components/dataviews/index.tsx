@@ -121,13 +121,7 @@ export default function DataViews< Item >( {
 					justify="start"
 					className="dataviews__view-actions"
 				>
-					<HStack
-						justify="start"
-						className="dataviews-filters__container"
-						wrap
-					>
 						{ search && <DataViewsSearch label={ searchLabel } /> }
-					</HStack>
 					{ view.type === LAYOUT_GRID && (
 						<DensityPicker
 							density={ density }
