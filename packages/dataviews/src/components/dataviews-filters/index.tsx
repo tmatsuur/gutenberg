@@ -159,7 +159,7 @@ function Filters() {
 		return null;
 	}
 	const filterComponents = [
-		...filters.map( ( filter ) => {
+		...visibleFilters.map( ( filter ) => {
 			return (
 				<FilterSummary
 					key={ filter.field }
