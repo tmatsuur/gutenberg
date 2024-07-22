@@ -262,15 +262,17 @@
 
 .dataviews-filters-toggle__count {
 	position: absolute;
-	top: math.div(-$grid-unit-15, 2);
-	right: -($grid-unit-05 + math.div($grid-unit-05, 2));
+	top: 0;
+	right: 0;
+	transform: translate(50%, -50%);
 	background: var(--wp-admin-theme-color, #3858e9);
-	height: $grid-unit-15 + math.div($grid-unit-05, 2);
-	width: $grid-unit-15 + math.div($grid-unit-05, 2);
-	line-height: $grid-unit-15 + math.div($grid-unit-05, 2);
+	height: $grid-unit-20;
+	min-width: $grid-unit-20;
+	line-height: $grid-unit-20;
+	padding: 0 $grid-unit-05;
 	text-align: center;
-	border-radius: 50%;
-	font-size: 10px;
+	border-radius: $grid-unit-10;
+	font-size: 11px;
 	outline: $border-width solid $white;
 	color: $white;
 }
