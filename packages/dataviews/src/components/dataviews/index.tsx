@@ -120,6 +120,7 @@ export default function DataViews< Item >( {
 					alignment="top"
 					justify="start"
 					className="dataviews__view-actions"
+					spacing={ 1 }
 				>
 						{ search && <DataViewsSearch label={ searchLabel } /> }
 					{ view.type === LAYOUT_GRID && (
