@@ -25,47 +25,47 @@ import type { NormalizedFilter, NormalizedField, View } from '../../types';
 
 export function useFilters( fields: NormalizedField< any >[], view: View ) {
 	return useMemo( () => {
-	const filters: NormalizedFilter[] = [];
-	fields.forEach( ( field ) => {
-		if ( ! field.elements?.length ) {
-			return;
-		}
+		const filters: NormalizedFilter[] = [];
+		fields.forEach( ( field ) => {
+			if ( ! field.elements?.length ) {
+				return;
+			}
 
-		const operators = sanitizeOperators( field );
-		if ( operators.length === 0 ) {
-			return;
-		}
+			const operators = sanitizeOperators( field );
+			if ( operators.length === 0 ) {
+				return;
+			}
 
-		const isPrimary = !! field.filterBy?.isPrimary;
-		filters.push( {
-			field: field.id,
-			name: field.label,
-			elements: field.elements,
-			singleSelection: operators.some( ( op ) =>
-				[ OPERATOR_IS, OPERATOR_IS_NOT ].includes( op )
-			),
-			operators,
-			isVisible:
-				isPrimary ||
-				!! view.filters?.some(
-					( f ) =>
-						f.field === field.id &&
-						ALL_OPERATORS.includes( f.operator )
+			const isPrimary = !! field.filterBy?.isPrimary;
+			filters.push( {
+				field: field.id,
+				name: field.label,
+				elements: field.elements,
+				singleSelection: operators.some( ( op ) =>
+					[ OPERATOR_IS, OPERATOR_IS_NOT ].includes( op )
 				),
-			isPrimary,
+				operators,
+				isVisible:
+					isPrimary ||
+					!! view.filters?.some(
+						( f ) =>
+							f.field === field.id &&
+							ALL_OPERATORS.includes( f.operator )
+					),
+				isPrimary,
+			} );
 		} );
-	} );
-	// Sort filters by primary property. We need the primary filters to be first.
-	// Then we sort by name.
-	filters.sort( ( a, b ) => {
-		if ( a.isPrimary && ! b.isPrimary ) {
-			return -1;
-		}
-		if ( ! a.isPrimary && b.isPrimary ) {
-			return 1;
-		}
-		return a.name.localeCompare( b.name );
-	} );
+		// Sort filters by primary property. We need the primary filters to be first.
+		// Then we sort by name.
+		filters.sort( ( a, b ) => {
+			if ( a.isPrimary && ! b.isPrimary ) {
+				return -1;
+			}
+			if ( ! a.isPrimary && b.isPrimary ) {
+				return 1;
+			}
+			return a.name.localeCompare( b.name );
+		} );
 		return filters;
 	}, [ fields, view ] );
 }
@@ -174,14 +174,14 @@ function Filters() {
 		addFilter,
 	];
 
-		filterComponents.push(
-			<ResetFilters
-				key="reset-filters"
-				filters={ filters }
-				view={ view }
-				onChangeView={ onChangeView }
-			/>
-		);
+	filterComponents.push(
+		<ResetFilters
+			key="reset-filters"
+			filters={ filters }
+			view={ view }
+			onChangeView={ onChangeView }
+		/>
+	);
 
 	return (
 		<HStack
