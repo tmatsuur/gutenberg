@@ -14,6 +14,7 @@ import { check, desktop, mobile, tablet, external } from '@wordpress/icons';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { store as preferencesStore } from '@wordpress/preferences';
+import { store as blockEditorStore } from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
@@ -37,6 +38,8 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 			};
 		}, [] );
 	const { setDeviceType } = useDispatch( editorStore );
+	const { __unstableSetEditorMode } = useDispatch( blockEditorStore );
+	const { __unstableGetEditorMode } = useSelect( blockEditorStore );
 	const isMobile = useViewportMatch( 'medium', '<' );
 	if ( isMobile ) {
 		return null;
@@ -94,6 +97,28 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 							{ __( 'Mobile' ) }
 						</MenuItem>
 					</MenuGroup>
+					{ !! window.__experimentalEnableZoomedOutPatternsTab && (
+						<MenuGroup>
+							{ __unstableGetEditorMode() !== 'zoom-out' && (
+								<MenuItem
+									onClick={ () =>
+										__unstableSetEditorMode( 'zoom-out' )
+									}
+								>
+									{ __( 'Zoom Out' ) }
+								</MenuItem>
+							) }
+							{ __unstableGetEditorMode() === 'zoom-out' && (
+								<MenuItem
+									onClick={ () =>
+										__unstableSetEditorMode( 'edit' )
+									}
+								>
+									{ __( 'Zoom In' ) }
+								</MenuItem>
+							) }
+						</MenuGroup>
+					) }
 					{ isTemplate && (
 						<MenuGroup>
 							<MenuItem
