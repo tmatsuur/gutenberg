@@ -49,6 +49,8 @@ type DataViewsProps< Item > = {
 	selection?: string[];
 	onChangeSelection?: ( items: string[] ) => void;
 	header?: ReactNode;
+	isShowingFilter?: boolean;
+	setIsShowingFilter?: React.Dispatch< React.SetStateAction< boolean > >;
 } & ( Item extends ItemWithId
 	? { getItemId?: ( item: Item ) => string }
 	: { getItemId: ( item: Item ) => string } );
@@ -70,11 +72,18 @@ export default function DataViews< Item >( {
 	selection: selectionProperty,
 	onChangeSelection,
 	header,
+	isShowingFilter: isShowingFilterProperty,
+	setIsShowingFilter: setIsShowingFilterProperty,
 }: DataViewsProps< Item > ) {
 	const [ selectionState, setSelectionState ] = useState< string[] >( [] );
 	const [ density, setDensity ] = useState< number >( 0 );
-	const [ isShowingFilter, setIsShowingFilter ] =
+	const [ isShowingFilterState, setIsShowingFilterState ] =
 		useState< boolean >( false );
+	const [ isShowingFilter, setIsShowingFilter ] =
+		isShowingFilterProperty === undefined ||
+		setIsShowingFilterProperty === undefined
+			? [ isShowingFilterState, setIsShowingFilterState ]
+			: [ isShowingFilterProperty, setIsShowingFilterProperty ];
 	const isUncontrolled =
 		selectionProperty === undefined || onChangeSelection === undefined;
 	const selection = isUncontrolled ? selectionState : selectionProperty;

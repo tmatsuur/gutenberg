@@ -145,8 +145,12 @@ export default function PostList( { postType } ) {
 	const [ view, setView ] = useView( postType );
 	const history = useHistory();
 	const location = useLocation();
-	const { postId, quickEdit = false } = location.params;
+	const { postId, quickEdit = false, isCustom, activeView } = location.params;
 	const [ selection, setSelection ] = useState( postId?.split( ',' ) ?? [] );
+	const [ isShowingFilter, setIsShowingFilter ] = useState( false );
+	useEffect( () => {
+		setIsShowingFilter( false );
+	}, [ isCustom, activeView, postType ] );
 	const onChangeSelection = useCallback(
 		( items ) => {
 			setSelection( items );
@@ -302,6 +306,8 @@ export default function PostList( { postType } ) {
 				onChangeSelection={ onChangeSelection }
 				getItemId={ getItemId }
 				defaultLayouts={ defaultLayouts }
+				isShowingFilter={ isShowingFilter }
+				setIsShowingFilter={ setIsShowingFilter }
 				header={
 					window.__experimentalQuickEditDataViews &&
 					view.type !== LAYOUT_LIST &&
