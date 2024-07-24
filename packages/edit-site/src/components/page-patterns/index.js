@@ -154,6 +154,7 @@ export default function DataviewsPatterns() {
 	}, [ editAction, type, templatePartActions, patternActions ] );
 	const id = useId();
 	const settings = usePatternSettings();
+	console.log({view, fields});
 	// Wrap everything in a block editor provider.
 	// This ensures 'styles' that are needed for the previews are synced
 	// from the site editor store to the block editor store.

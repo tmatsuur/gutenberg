@@ -122,15 +122,17 @@ export default function DataViews< Item >( {
 					className="dataviews__view-actions"
 					spacing={ 1 }
 				>
-					{ search && <DataViewsSearch label={ searchLabel } /> }
-					<FilterVisibilityToggle
-						filters={ filters }
-						view={ view }
-						onChangeView={ onChangeView }
-						setOpenedFilter={ setOpenedFilter }
-						setIsShowingFilter={ setIsShowingFilter }
-						isShowingFilter={ isShowingFilter }
-					/>
+					<HStack justify="start" wrap>
+						{ search && <DataViewsSearch label={ searchLabel } /> }
+						<FilterVisibilityToggle
+							filters={ filters }
+							view={ view }
+							onChangeView={ onChangeView }
+							setOpenedFilter={ setOpenedFilter }
+							setIsShowingFilter={ setIsShowingFilter }
+							isShowingFilter={ isShowingFilter }
+						/>
+					</HStack>
 					{ view.type === LAYOUT_GRID && (
 						<DensityPicker
 							density={ density }
