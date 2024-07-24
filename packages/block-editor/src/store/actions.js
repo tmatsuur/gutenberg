@@ -1683,11 +1683,18 @@ export const __unstableSetEditorMode =
 				if ( sectionRootClientId ) {
 					const sectionClientIds =
 						select.getBlockOrder( sectionRootClientId );
-					sectionClientId = select
-						.getBlockParents( firstSelectedClientId )
-						.find( ( parent ) =>
-							sectionClientIds.includes( parent )
-						);
+
+					// Is our selected block at the top level of the selected blocks?
+					if ( sectionClientIds?.includes( firstSelectedClientId ) ) {
+						sectionClientId = firstSelectedClientId;
+					} else {
+						// Find the closest section block that contains the selected block
+						sectionClientId = select
+							.getBlockParents( firstSelectedClientId )
+							.find( ( parent ) =>
+								sectionClientIds.includes( parent )
+							);
+					}
 				} else {
 					sectionClientId = select.getBlockHierarchyRootClientId(
 						firstSelectedClientId
