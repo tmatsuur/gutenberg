@@ -65,6 +65,9 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 		desktop,
 	};
 
+	const isZoomOutExperiment =
+		!! window.__experimentalEnableZoomedOutPatternsTab;
+
 	return (
 		<DropdownMenu
 			className="editor-preview-dropdown"
@@ -79,11 +82,37 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 				<>
 					<MenuGroup>
 						<MenuItem
-							onClick={ () => setDeviceType( 'Desktop' ) }
-							icon={ deviceType === 'Desktop' && check }
+							onClick={ () => {
+								if ( isZoomOutExperiment ) {
+									// Rather than setting to edit, we may need to set back to whatever it was previously.
+									__unstableSetEditorMode( 'edit' );
+								}
+								setDeviceType( 'Desktop' );
+							} }
+							icon={
+								deviceType === 'Desktop' &&
+								__unstableGetEditorMode() !== 'zoom-out' &&
+								check
+							}
 						>
-							{ __( 'Desktop' ) }
+							{ isZoomOutExperiment
+								? __( '100%' )
+								: __( 'Desktop' ) }
 						</MenuItem>
+						{ isZoomOutExperiment && (
+							<MenuItem
+								onClick={ () => {
+									setDeviceType( 'Desktop' );
+									__unstableSetEditorMode( 'zoom-out' );
+								} }
+								icon={
+									__unstableGetEditorMode() === 'zoom-out' &&
+									check
+								}
+							>
+								{ __( '50%' ) }
+							</MenuItem>
+						) }
 						<MenuItem
 							onClick={ () => setDeviceType( 'Tablet' ) }
 							icon={ deviceType === 'Tablet' && check }
@@ -97,28 +126,6 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 							{ __( 'Mobile' ) }
 						</MenuItem>
 					</MenuGroup>
-					{ !! window.__experimentalEnableZoomedOutPatternsTab && (
-						<MenuGroup>
-							{ __unstableGetEditorMode() !== 'zoom-out' && (
-								<MenuItem
-									onClick={ () =>
-										__unstableSetEditorMode( 'zoom-out' )
-									}
-								>
-									{ __( 'Zoom Out' ) }
-								</MenuItem>
-							) }
-							{ __unstableGetEditorMode() === 'zoom-out' && (
-								<MenuItem
-									onClick={ () =>
-										__unstableSetEditorMode( 'edit' )
-									}
-								>
-									{ __( 'Zoom In' ) }
-								</MenuItem>
-							) }
-						</MenuGroup>
-					) }
 					{ isTemplate && (
 						<MenuGroup>
 							<MenuItem
