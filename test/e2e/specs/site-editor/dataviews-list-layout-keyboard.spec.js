@@ -43,11 +43,6 @@ test.describe( 'Dataviews List Layout', () => {
 
 		await page.keyboard.press( 'Tab' );
 		await expect(
-			page.getByRole( 'button', { name: 'Reset' } )
-		).toBeFocused();
-
-		await page.keyboard.press( 'Tab' );
-		await expect(
 			page.getByRole( 'button', { name: 'Layout' } )
 		).toBeFocused();
 
@@ -167,7 +162,6 @@ test.describe( 'Dataviews List Layout', () => {
 		await page.getByRole( 'searchbox', { name: 'Search' } ).click();
 
 		// Tab until reaching the items list.
-		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
