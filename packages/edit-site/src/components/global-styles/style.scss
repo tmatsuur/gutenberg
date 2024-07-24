@@ -145,6 +145,15 @@
 		// color palette adds empty .components-circular-option-picker
 		margin-bottom: -1 * $grid-unit-05;
 	}
+
+	.edit-site-global-styles__shadow-editor-control {
+		flex-grow: 1;
+	}
+
+	.edit-site-global-styles__shadow-editor-control-toggle-wrapper {
+		// Make the button wrapper height the same as the adjacent input height.
+		height: $button-size-next-default-40px;
+	}
 }
 
 .edit-site-global-styles__shadow-editor__dropdown {
