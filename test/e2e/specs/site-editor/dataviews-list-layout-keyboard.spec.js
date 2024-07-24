@@ -69,7 +69,6 @@ test.describe( 'Dataviews List Layout', () => {
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
-		await page.keyboard.press( 'Tab' );
 
 		// Make sure the items have loaded before reaching for the 1st item in the list.
 		await expect( page.getByRole( 'grid' ) ).toBeVisible();
@@ -99,7 +98,6 @@ test.describe( 'Dataviews List Layout', () => {
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
-		await page.keyboard.press( 'Tab' );
 
 		// Make sure the items have loaded before reaching for the 1st item in the list.
 		await expect( page.getByRole( 'grid' ) ).toBeVisible();
@@ -120,7 +118,6 @@ test.describe( 'Dataviews List Layout', () => {
 		await page.getByRole( 'searchbox', { name: 'Search' } ).click();
 
 		// Tab until reaching the items list.
-		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
 		await page.keyboard.press( 'Tab' );
