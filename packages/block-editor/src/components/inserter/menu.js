@@ -13,12 +13,11 @@ import {
 	useMemo,
 	useRef,
 	useLayoutEffect,
-	useEffect,
 } from '@wordpress/element';
 import { VisuallyHidden, SearchControl, Popover } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useDebouncedInput, usePrevious } from '@wordpress/compose';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useDebouncedInput } from '@wordpress/compose';
+import { useSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -27,13 +26,12 @@ import Tips from './tips';
 import InserterPreviewPanel from './preview-panel';
 import BlockTypesTab from './block-types-tab';
 import BlockPatternsTab from './block-patterns-tab';
-import { PatternCategoryPreviews } from './block-patterns-tab/pattern-category-previews';
+import { PatternCategoryPreviewPanel } from './block-patterns-tab/pattern-category-preview-panel';
 import { MediaTab, MediaCategoryPanel } from './media-tab';
 import InserterSearchResults from './search-results';
 import useInsertionPoint from './hooks/use-insertion-point';
 import { store as blockEditorStore } from '../../store';
 import TabbedSidebar from '../tabbed-sidebar';
-import { unlock } from '../../lock-unlock';
 
 const NOOP = () => {};
 function InserterMenu(
@@ -54,36 +52,14 @@ function InserterMenu(
 	},
 	ref
 ) {
-	const { isZoomOutMode, isZoomOutLevelBlockSelected } = useSelect(
-		( select ) => {
-			const {
-				getSettings,
-				getBlockOrder,
-				getSelectedBlockClientId,
-				__unstableGetEditorMode,
-			} = select( blockEditorStore );
+	const { isZoomOutMode } = useSelect( ( select ) => {
+		return {
+			isZoomOutMode:
+				select( blockEditorStore ).__unstableGetEditorMode() ===
+				'zoom-out',
+		};
+	}, [] );
 
-			const { sectionRootClientId: root } = unlock( getSettings() );
-
-			const selectedBlockClientId = getSelectedBlockClientId();
-
-			return {
-				isZoomOutMode: __unstableGetEditorMode() === 'zoom-out',
-				isZoomOutLevelBlockSelected:
-					! selectedBlockClientId ||
-					root === selectedBlockClientId ||
-					getBlockOrder( root ).includes( selectedBlockClientId ),
-			};
-		},
-		[]
-	);
-
-	// const {
-	// 	getBlockSelectionStart,
-	// 	getBlockOrder,
-	// } = useSelect( blockEditorStore );
-
-	const { __unstableSetEditorMode } = useDispatch( blockEditorStore );
 	const [ filterValue, setFilterValue, delayedFilterValue ] =
 		useDebouncedInput( __experimentalFilterValue );
 	const [ hoveredItem, setHoveredItem ] = useState( null );
@@ -267,7 +243,7 @@ function InserterMenu(
 				selectedCategory={ selectedPatternCategory }
 			>
 				{ showPatternPanel && (
-					<PatternCategoryPreviews
+					<PatternCategoryPreviewPanel
 						key={ selectedPatternCategory.name }
 						rootClientId={ destinationRootClientId }
 						onInsert={ onInsertPattern }
@@ -312,25 +288,6 @@ function InserterMenu(
 		selectedMediaCategory,
 		setSelectedMediaCategory,
 		showMediaPanel,
-	] );
-
-	const previousShowPatternPanel = usePrevious( showPatternPanel );
-
-	useEffect( () => {
-		// We only want to do this when _opening_ the preview panel.
-		if (
-			! previousShowPatternPanel &&
-			showPatternPanel &&
-			! isZoomOutMode &&
-			isZoomOutLevelBlockSelected
-		) {
-			__unstableSetEditorMode( 'zoom-out' );
-		}
-	}, [
-		previousShowPatternPanel,
-		showPatternPanel,
-		isZoomOutMode,
-		isZoomOutLevelBlockSelected,
 	] );
 
 	const handleSetSelectedTab = ( value ) => {
