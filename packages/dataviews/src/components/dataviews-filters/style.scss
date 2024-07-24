@@ -273,7 +273,7 @@
 	text-align: center;
 	border-radius: $grid-unit-10;
 	font-size: 11px;
-	outline: $border-width solid $white;
+	outline: var(--wp-admin-border-width-focus) solid $white;
 	color: $white;
 }
 
