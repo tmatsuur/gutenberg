@@ -71,6 +71,7 @@ function InserterMenu(
 				isZoomOutMode: __unstableGetEditorMode() === 'zoom-out',
 				isZoomOutLevelBlockSelected:
 					! selectedBlockClientId ||
+					root === selectedBlockClientId ||
 					getBlockOrder( root ).includes( selectedBlockClientId ),
 			};
 		},
