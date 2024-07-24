@@ -17,7 +17,7 @@ import {
 import { VisuallyHidden, SearchControl, Popover } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useDebouncedInput } from '@wordpress/compose';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -32,6 +32,7 @@ import InserterSearchResults from './search-results';
 import useInsertionPoint from './hooks/use-insertion-point';
 import { store as blockEditorStore } from '../../store';
 import TabbedSidebar from '../tabbed-sidebar';
+import { useZoomOut } from '../../hooks/use-zoom-out';
 
 const NOOP = () => {};
 function InserterMenu(
@@ -57,7 +58,6 @@ function InserterMenu(
 			select( blockEditorStore ).__unstableGetEditorMode() === 'zoom-out',
 		[]
 	);
-	const { __unstableSetEditorMode } = useDispatch( blockEditorStore );
 	const [ filterValue, setFilterValue, delayedFilterValue ] =
 		useDebouncedInput( __experimentalFilterValue );
 	const [ hoveredItem, setHoveredItem ] = useState( null );
@@ -135,7 +135,6 @@ function InserterMenu(
 			setSelectedPatternCategory( patternCategory );
 			setPatternFilter( filter );
 			onPatternCategorySelection?.();
-			__unstableSetEditorMode( 'zoom-out' );
 		},
 		[ setSelectedPatternCategory, onPatternCategorySelection ]
 	);
@@ -146,6 +145,11 @@ function InserterMenu(
 		!! selectedPatternCategory;
 
 	const showMediaPanel = selectedTab === 'media' && !! selectedMediaCategory;
+
+	const showZoomOut =
+		showPatternPanel && !! window.__experimentalEnableZoomedOutPatternsTab;
+
+	useZoomOut( showZoomOut );
 
 	const inserterSearch = useMemo( () => {
 		if ( selectedTab === 'media' ) {
