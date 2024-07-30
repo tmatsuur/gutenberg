@@ -395,17 +395,40 @@ export function getStylesDeclarations(
 	);
 
 	/*
-	 * Set background defaults.
-	 * Applies to all background styles except the top-level site background.
+	 * Preprocess background image values.
+	 * 1. Sets default values for blocks (not root).
+	 * 2. .
+	 *
+	 * Note: A refactor is for the style engine to handle ref resolution (and possibly defaults)
+	 * via a public util used internally and externally. Theme.json tree and defaults could be passed
+	 * as options.
 	 */
-	if ( ! isRoot && !! blockStyles.background ) {
-		blockStyles = {
-			...blockStyles,
-			background: {
-				...blockStyles.background,
-				...setBackgroundStyleDefaults( blockStyles.background ),
-			},
-		};
+	if ( !! blockStyles.background ) {
+		// 1. Set default values for block styles except the top-level site background
+		if ( ! isRoot ) {
+			blockStyles = {
+				...blockStyles,
+				background: {
+					...blockStyles.background,
+					...setBackgroundStyleDefaults( blockStyles.background ),
+				},
+			};
+		}
+
+		/*
+		 * 2. Resolve dynamic values before they are compiled by the style engine,
+		 * which doesn't (yet) resolve dynamic values.
+		 */
+		if ( blockStyles.background?.backgroundImage?.ref ) {
+			if ( typeof blockStyles.background.backgroundImage !== 'string' ) {
+				const refPath =
+					blockStyles.background.backgroundImage.ref.split( '.' );
+				blockStyles.background.backgroundImage = getValueFromObjectPath(
+					tree,
+					refPath
+				);
+			}
+		}
 	}
 
 	// The goal is to move everything to server side generated engine styles
