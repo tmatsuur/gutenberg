@@ -60,7 +60,15 @@ function useView( postType ) {
 		}
 		return defaultView;
 	}, [ isCustom, activeView, layout, postType, DEFAULT_VIEWS ] );
-	const [ view, setView ] = useState( selectedDefaultView );
+	const [ view, setViewS ] = useState( selectedDefaultView );
+	const setView = useCallback(
+		( ...args ) => {
+			console.trace();
+			console.log( args );
+			setViewS( ...args );
+		},
+		[ setViewS ]
+	);
 
 	useEffect( () => {
 		if ( selectedDefaultView ) {
@@ -145,12 +153,13 @@ export default function PostList( { postType } ) {
 	const [ view, setView ] = useView( postType );
 	const history = useHistory();
 	const location = useLocation();
-	const { postId, quickEdit = false, isCustom, activeView } = location.params;
+	const {
+		postId,
+		quickEdit = false,
+		isCustom,
+		activeView = 'all',
+	} = location.params;
 	const [ selection, setSelection ] = useState( postId?.split( ',' ) ?? [] );
-	const [ isShowingFilter, setIsShowingFilter ] = useState( false );
-	useEffect( () => {
-		setIsShowingFilter( false );
-	}, [ isCustom, activeView, postType ] );
 	const onChangeSelection = useCallback(
 		( items ) => {
 			setSelection( items );
@@ -295,6 +304,7 @@ export default function PostList( { postType } ) {
 			}
 		>
 			<DataViews
+				key={ activeView + isCustom }
 				paginationInfo={ paginationInfo }
 				fields={ fields }
 				actions={ actions }
@@ -306,8 +316,6 @@ export default function PostList( { postType } ) {
 				onChangeSelection={ onChangeSelection }
 				getItemId={ getItemId }
 				defaultLayouts={ defaultLayouts }
-				isShowingFilter={ isShowingFilter }
-				setIsShowingFilter={ setIsShowingFilter }
 				header={
 					window.__experimentalQuickEditDataViews &&
 					view.type !== LAYOUT_LIST &&

@@ -97,10 +97,6 @@ const DEFAULT_VIEW = {
 export default function PageTemplates() {
 	const { params } = useLocation();
 	const { activeView = 'all', layout, postId } = params;
-	const [ isShowingFilter, setIsShowingFilter ] = useState( false );
-	useEffect( () => {
-		setIsShowingFilter( false );
-	}, [ activeView ] );
 	const [ selection, setSelection ] = useState( [ postId ] );
 
 	const defaultView = useMemo( () => {
@@ -219,6 +215,7 @@ export default function PageTemplates() {
 			actions={ <AddNewTemplate /> }
 		>
 			<DataViews
+				key={ activeView }
 				paginationInfo={ paginationInfo }
 				fields={ fields }
 				actions={ actions }
@@ -229,8 +226,6 @@ export default function PageTemplates() {
 				onChangeSelection={ onChangeSelection }
 				selection={ selection }
 				defaultLayouts={ defaultLayouts }
-				isShowingFilter={ isShowingFilter }
-				setIsShowingFilter={ setIsShowingFilter }
 			/>
 		</Page>
 	);

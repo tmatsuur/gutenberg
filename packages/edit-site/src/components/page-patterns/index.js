@@ -86,11 +86,6 @@ export default function DataviewsPatterns() {
 		syncStatus: viewSyncStatus,
 	} );
 
-	const [ isShowingFilter, setIsShowingFilter ] = useState( false );
-	useEffect( () => {
-		setIsShowingFilter( false );
-	}, [ categoryId, postType ] );
-
 	const { records } = useEntityRecords( 'postType', TEMPLATE_PART_POST_TYPE, {
 		per_page: -1,
 	} );
@@ -176,6 +171,7 @@ export default function DataviewsPatterns() {
 					descriptionId={ `${ id }-description` }
 				/>
 				<DataViews
+					key={ categoryId + postType }
 					paginationInfo={ paginationInfo }
 					fields={ fields }
 					actions={ actions }
@@ -185,8 +181,6 @@ export default function DataviewsPatterns() {
 					view={ view }
 					onChangeView={ setView }
 					defaultLayouts={ defaultLayouts }
-					isShowingFilter={ isShowingFilter }
-					setIsShowingFilter={ setIsShowingFilter }
 				/>
 			</Page>
 		</ExperimentalBlockEditorProvider>
