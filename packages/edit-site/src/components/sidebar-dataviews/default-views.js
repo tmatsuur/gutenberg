@@ -165,6 +165,8 @@ export function useDefaultViews( { postType } ) {
 				icon: trash,
 				view: {
 					...DEFAULT_POST_BASE,
+					type: LAYOUT_TABLE,
+					layout: defaultLayouts[ LAYOUT_TABLE ].layout,
 					filters: [
 						{
 							field: 'status',

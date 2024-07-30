@@ -39,33 +39,57 @@ const { useLocation, useHistory } = unlock( routerPrivateApis );
 const { useEntityRecordsWithPermissions } = unlock( coreDataPrivateApis );
 const EMPTY_ARRAY = [];
 
+const getDefaultView = ( defaultViews, activeView ) =>
+	( defaultViews =
+		defaultViews.find( ( { slug } ) => slug === activeView ).view ||
+		defaultViews[ 0 ].view );
+
 function useView( postType ) {
 	const {
 		params: { activeView = 'all', isCustom = 'false', layout },
 	} = useLocation();
 	const history = useHistory();
 
+	// PROCESS DEFAULT VIEWS.
 	const defaultViews = useDefaultViews( { postType } );
-	const selectedDefaultView = useMemo( () => {
-		const defaultView =
-			isCustom === 'false' &&
-			defaultViews.find( ( { slug } ) => slug === activeView )?.view;
-		if ( isCustom === 'false' && layout ) {
-			return {
-				...defaultView,
-				type: layout,
-				layout: defaultLayouts[ layout ]?.layout,
-			};
-		}
-		return defaultView;
-	}, [ isCustom, activeView, layout, defaultViews ] );
-	const [ view, setView ] = useState( selectedDefaultView );
+	const [ view, setView ] = useState( () =>
+		isCustom === 'false'
+			? getDefaultView( defaultViews, activeView )
+			: defaultViews[ 0 ].view
+	);
 
 	useEffect( () => {
-		if ( selectedDefaultView ) {
-			setView( selectedDefaultView );
+		setView( ( prevView ) => ( { ...prevView, type: layout } ) );
+	}, [ layout ] );
+
+	useEffect( () => {
+		if ( isCustom === 'false' ) {
+			const defaultView = getDefaultView( defaultViews, activeView );
+			setView( defaultView );
+
+			const { params } = history.getLocationWithParams();
+			history.push( {
+				...params,
+				layout: defaultView.type,
+			} );
 		}
-	}, [ selectedDefaultView ] );
+	}, [ defaultViews, activeView, isCustom, history ] );
+
+	const setDefaultViewAndUpdateUrl = useCallback(
+		( newView ) => {
+			if ( newView.type !== view?.type ) {
+				const { params } = history.getLocationWithParams();
+				history.push( {
+					...params,
+					layout: newView.type,
+				} );
+			}
+			setView( newView );
+		},
+		[ history, view?.type ]
+	);
+
+	// PROCESS CUSTOM VIEWS.
 	const editedViewRecord = useSelect(
 		( select ) => {
 			if ( isCustom !== 'true' ) {
@@ -98,40 +122,28 @@ function useView( postType ) {
 	}, [ editedViewRecord?.content ] );
 
 	const setCustomView = useCallback(
-		( viewToSet ) => {
+		( newView ) => {
 			editEntityRecord(
 				'postType',
 				'wp_dataviews',
 				editedViewRecord?.id,
 				{
-					content: JSON.stringify( viewToSet ),
+					content: JSON.stringify( newView ),
 				}
 			);
 		},
 		[ editEntityRecord, editedViewRecord?.id ]
 	);
 
-	const setDefaultViewAndUpdateUrl = useCallback(
-		( viewToSet ) => {
-			if ( viewToSet.type !== view?.type ) {
-				const { params } = history.getLocationWithParams();
-				history.push( {
-					...params,
-					layout: viewToSet.type,
-				} );
-			}
-			setView( viewToSet );
-		},
-		[ history, view?.type ]
-	);
-
 	if ( isCustom === 'false' ) {
 		return [ view, setDefaultViewAndUpdateUrl ];
-	} else if ( isCustom === 'true' && customView ) {
+	}
+
+	if ( isCustom === 'true' && customView ) {
 		return [ customView, setCustomView ];
 	}
 
-	// No view was found.
+	// No custom view was found.
 	return [ defaultViews[ 0 ].view, setDefaultViewAndUpdateUrl ];
 }
 
