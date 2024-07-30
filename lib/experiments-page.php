@@ -90,7 +90,7 @@ function gutenberg_initialize_experiments_settings() {
 			'id'    => 'gutenberg-block-experiments',
 		)
 	);
-	
+
 	add_settings_field(
 		'gutenberg-form-blocks',
 		__( 'Form and input blocks ', 'gutenberg' ),
