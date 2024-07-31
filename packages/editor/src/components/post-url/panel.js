@@ -3,10 +3,13 @@
  */
 import { useMemo, useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { Dropdown, Button } from '@wordpress/components';
+import {
+	Dropdown,
+	Button,
+	__experimentalTruncate as Truncate,
+} from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { safeDecodeURIComponent } from '@wordpress/url';
-import { store as coreStore } from '@wordpress/core-data';
 
 /**
  * Internal dependencies
@@ -40,7 +43,7 @@ export default function PostURLPanel() {
 
 	return (
 		<PostURLCheck>
-			<PostPanelRow label={ __( 'Link' ) } ref={ setPopoverAnchor }>
+			<PostPanelRow label={ __( 'Permalink' ) } ref={ setPopoverAnchor }>
 				<Dropdown
 					popoverProps={ popoverProps }
 					className="editor-post-url__panel-dropdown"
@@ -59,19 +62,10 @@ export default function PostURLPanel() {
 }
 
 function PostURLToggle( { isOpen, onClick } ) {
-	const { slug, isFrontPage, postLink } = useSelect( ( select ) => {
-		const { getCurrentPostId, getCurrentPost } = select( editorStore );
-		const { getEditedEntityRecord, canUser } = select( coreStore );
-		const siteSettings = canUser( 'read', {
-			kind: 'root',
-			name: 'site',
-		} )
-			? getEditedEntityRecord( 'root', 'site' )
-			: undefined;
-		const _id = getCurrentPostId();
+	const { slug, postLink } = useSelect( ( select ) => {
+		const { getCurrentPost } = select( editorStore );
 		return {
 			slug: select( editorStore ).getEditedPostSlug(),
-			isFrontPage: siteSettings?.page_on_front === _id,
 			postLink: getCurrentPost()?.link,
 		};
 	}, [] );
@@ -86,7 +80,7 @@ function PostURLToggle( { isOpen, onClick } ) {
 			aria-label={ sprintf( __( 'Change link: %s' ), decodedSlug ) }
 			onClick={ onClick }
 		>
-			{ isFrontPage ? postLink : <>/{ decodedSlug }</> }
+			<Truncate numberOfLines={ 1 }>{ postLink }</Truncate>
 		</Button>
 	);
 }
