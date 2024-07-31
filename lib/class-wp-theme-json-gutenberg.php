@@ -2365,7 +2365,7 @@ class WP_Theme_JSON_Gutenberg {
 			// Processes background image styles.
 			if ( 'background-image' === $css_property && ! empty( $value ) ) {
 				$background_styles = gutenberg_style_engine_get_styles(
-					array( 'background' => array( 'backgroundImage' => $value ) ),
+					array( 'background' => array( 'backgroundImage' => $value ) )
 				);
 
 				$value = $background_styles['declarations'][ $css_property ];
