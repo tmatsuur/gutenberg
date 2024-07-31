@@ -4,4 +4,7 @@ iframe[name="editor-canvas"] {
 	height: 100%;
 	display: block;
 	background-color: transparent;
+	// Animate the transform (for Zoom Out). The easing and duration are to match those
+	// of the interface skeleton’s secondary sidebar (where the Inserter lives).
+	transition: transform 0.25s cubic-bezier(0.6, 0, 0.4, 1);
 }
