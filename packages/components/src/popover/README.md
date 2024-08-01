@@ -226,6 +226,13 @@ Adjusts the size of the popover to prevent its contents from going out of view w
 -   Required: No
 -   Default: `true`
 
+### `shift`: `boolean`
+
+Enables the popover to shift in order to stay in view when meeting the viewport edges.
+
+-   Required: No
+-   Default: `false`
+
 ### `variant`: `'toolbar' | 'unstyled'`
 
 Specifies the popover's style.
